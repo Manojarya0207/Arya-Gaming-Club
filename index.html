@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Free Fire Warriors Club — Arya Group</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0078ff;
+      --primary-light: #2d8fff;
+      --bg: #f5f8fc;
+      --text: #222;
+      --muted: #666;
+      --radius: 12px;
+      --shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    header {
+      background: white;
+      box-shadow: var(--shadow);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header img {
+      height: 52px;
+      border-radius: 8px;
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      color: var(--primary);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+
+    form {
+      background: white;
+      padding: 32px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h2 {
+      color: var(--primary);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: block;
+      color: var(--text);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .col { flex: 1; }
+
+    .payment-box {
+      border: 1px solid #cfe4ff;
+      background: #f9fbff;
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-top: 8px;
+    }
+
+    .payment-box strong {
+      color: var(--primary);
+    }
+
+    .qr {
+      display: block;
+      margin: 12px auto;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .copy-box {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .copy-box input {
+      flex: 1;
+      background: #f4f7fb;
+      border: 1px dashed #b3d2ff;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .copy-btn, .upi-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .copy-btn:hover, .upi-btn:hover {
+      background: var(--primary-light);
+    }
+
+    .upi-btn {
+      display: block;
+      text-align: center;
+      margin: 10px auto;
+      width: 100%;
+    }
+
+    .preview img {
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      margin-top: 6px;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+      margin-top: 10px;
+    }
+
+    button[type="submit"]:disabled {
+      background: #aacbff;
+      cursor: not-allowed;
+    }
+
+    button[type="submit"]:hover:not(:disabled) {
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background: white;
+      padding: 14px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 600px) {
+      form { padding: 22px; }
+      .row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="Logo.png" alt="Arya Group Logo" />
+    <h1>Free Fire Warriors Club</h1>
+  </header>
+
+  <main>
+    <form id="clubForm">
+      <h2>Registration Form</h2>
+
+      <label>Full Name</label>
+      <input type="text" id="name" required placeholder="Enter your full name" />
+
+      <div class="row">
+        <div class="col">
+          <label>Phone Number</label>
+          <input type="tel" id="phone" required placeholder="+91 XXXXXXXX" />
+        </div>
+        <div class="col">
+          <label>Age</label>
+          <input type="number" id="age" min="10" max="80" required />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="you@example.com" />
+        </div>
+        <div class="col">
+          <label>Free Fire ID</label>
+          <input type="text" id="gameID" required placeholder="Game ID / Nickname" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>Team Size</label>
+          <select id="teamSize" required>
+            <option value="">Select</option>
+            <option>1 Player (Solo)</option>
+            <option>2 Players (Duo)</option>
+            <option>4 Players (Squad)</option>
+          </select>
+        </div>
+        <div class="col">
+          <label>Platform</label>
+          <select id="platform" required>
+            <option value="">Select</option>
+            <option>Mobile</option>
+            <option>Emulator</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Experience Level</label>
+      <select id="experience" required>
+        <option value="">Select</option>
+        <option>Beginner</option>
+        <option>Intermediate</option>
+        <option>Pro</option>
+      </select>
+
+      <label>Why do you want to join?</label>
+      <textarea id="reason" rows="3" required placeholder="Tell us in a few words..."></textarea>
+
+      <div class="payment-box">
+        <p><strong>💳 Entry Fee: ₹99</strong></p>
+        <p>Scan this QR code or use the UPI ID below to pay securely.</p>
+
+        <img src="QR_CODE.jpeg" alt="QR Code" class="qr" />
+
+        <button type="button" id="upiBtn" class="upi-btn">Pay ₹99 via UPI App</button>
+
+        <div class="copy-box">
+          <input id="upi" type="text" readonly value="manojarya0207@upi" />
+          <button type="button" id="copyBtn" class="copy-btn">Copy</button>
+        </div>
+
+        <label>Upload Payment Proof</label>
+        <input type="file" id="proof" accept="image/*" required />
+
+        <div class="preview" id="preview"></div>
+      </div>
+
+      <button type="submit" id="submitBtn" disabled>Submit Application</button>
+    </form>
+  </main>
+
+  <footer>
+    © 2025 Arya Group | Contact: manojarya0207@mail.com | +91 7483646528
+  </footer>
+
+  <script>
+  const ADMIN_WHATSAPP = "917483646528";
+  const UPI_ID = "manojarya0207@upi";
+  const PAYEE_NAME = "Manoj Arya";
+  const AMOUNT = 99;
+  const NOTE = "FF Club Entry";
+
+  const form = document.getElementById("clubForm");
+  const proof = document.getElementById("proof");
+  const submitBtn = document.getElementById("submitBtn");
+  const preview = document.getElementById("preview");
+  const upiBtn = document.getElementById("upiBtn");
+
+  // UPI deep link (works on mobile)
+  const upiIntent = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${AMOUNT}&tn=${encodeURIComponent(NOTE)}&cu=INR`;
+  upiBtn.addEventListener("click", () => {
+    window.location.href = upiIntent;
+  });
+
+  // Enable submit when image uploaded
+  proof.addEventListener("change", () => {
+    preview.innerHTML = "";
+    const file = proof.files[0];
+    if (!file) {
+      submitBtn.disabled = true;
+      return;
+    }
+    const img = document.createElement("img");
+    img.src = URL.createObjectURL(file);
+    img.onload = () => URL.revokeObjectURL(img.src);
+    preview.appendChild(img);
+    submitBtn.disabled = false;
+  });
+
+  // Copy UPI ID
+  document.getElementById("copyBtn").addEventListener("click", async () => {
+    await navigator.clipboard.writeText(UPI_ID);
+    alert("✅ UPI ID copied!");
+  });
+
+  // WhatsApp message builder — fixed with safe emojis
+  function buildMessage() {
+    const val = id => document.getElementById(id).value.trim();
+
+       return [
+      "✅ *Payment proof uploaded successfully.*",
+      "📸 *Image sent to admin automatically.*",
+      "",
+      `👤 *Name:* ${val("name")}`,
+      `📞 *Phone:* ${val("phone")}`,
+      `📧 *Email:* ${val("email") || "—"}`,
+      `🎮 *Free Fire ID:* ${val("gameID")}`,
+      `👥 *Team:* ${val("teamSize")}`,
+      `💻 *Platform:* ${val("platform")}`,
+      `⭐ *Level:* ${val("experience")}`,
+      `💬 *Reason:* ${val("reason")}`,
+      "",
+      `💰 *Amount:* ₹${AMOUNT}`,
+      `💳 *UPI:* ${UPI_ID}`,
+      "",
+      "🏢 *Powered by Arya Group*"
+    ].join("\n");
+  }
+
+  // Form submission
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const msg = encodeURIComponent(buildMessage());
+    const phone = ADMIN_WHATSAPP;
+    window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
+    form.reset();
+    preview.innerHTML = "";
+    submitBtn.disabled = true;
+  });
+</script>
+
+</body>
+</html>

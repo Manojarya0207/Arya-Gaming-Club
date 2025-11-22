@@ -258,6 +258,12 @@
         </div>
       </div>
 
+      <!-- TEAM MEMBER ID SECTION -->
+      <div id="teamMembersBox" style="display:none; margin-top:10px;">
+        <label><strong>Team Members Game IDs</strong></label>
+        <div id="teamMembersInputs"></div>
+      </div>
+
       <label>Experience Level</label>
       <select id="experience" required>
         <option value="">Select</option>
@@ -309,20 +315,19 @@
   const preview = document.getElementById("preview");
   const upiBtn = document.getElementById("upiBtn");
 
-  // UPI deep link (works on mobile)
-  const upiIntent = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${AMOUNT}&tn=${encodeURIComponent(NOTE)}&cu=INR`;
-  upiBtn.addEventListener("click", () => {
-    window.location.href = upiIntent;
-  });
+  const teamSize = document.getElementById("teamSize");
+  const teamMembersBox = document.getElementById("teamMembersBox");
+  const teamMembersInputs = document.getElementById("teamMembersInputs");
 
-  // Enable submit when image uploaded
+  // UPI deep link
+  const upiIntent = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${AMOUNT}&tn=${encodeURIComponent(NOTE)}&cu=INR`;
+  upiBtn.addEventListener("click", () => window.location.href = upiIntent);
+
+  // Enable submit on image
   proof.addEventListener("change", () => {
     preview.innerHTML = "";
     const file = proof.files[0];
-    if (!file) {
-      submitBtn.disabled = true;
-      return;
-    }
+    if (!file) { submitBtn.disabled = true; return; }
     const img = document.createElement("img");
     img.src = URL.createObjectURL(file);
     img.onload = () => URL.revokeObjectURL(img.src);
@@ -336,19 +341,57 @@
     alert("✅ UPI ID copied!");
   });
 
-  // WhatsApp message builder — fixed with safe emojis
-  function buildMessage() {
-    const val = id => document.getElementById(id).value.trim();
+  // TEAM MEMBER INPUTS
+  teamSize.addEventListener("change", () => {
+    const value = teamSize.value;
+    teamMembersInputs.innerHTML = "";
 
-       return [
+    if (value === "2 Players (Duo)") {
+      teamMembersBox.style.display = "block";
+      addMemberFields(1);
+    } 
+    else if (value === "4 Players (Squad)") {
+      teamMembersBox.style.display = "block";
+      addMemberFields(3);
+    } 
+    else {
+      teamMembersBox.style.display = "none";
+    }
+  });
+
+  function addMemberFields(count) {
+    for (let i = 1; i <= count; i++) {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = `Member ${i} Free Fire ID`;
+      input.id = `member${i}`;
+      input.required = true;
+      input.style.marginBottom = "10px";
+      teamMembersInputs.appendChild(input);
+    }
+  }
+
+  // WhatsApp message builder
+  function buildMessage() {
+    const val = id => document.getElementById(id)?.value.trim() || "—";
+
+    let members = "";
+    if (teamSize.value === "2 Players (Duo)") {
+      members = `👥 *Team Members:*\n- ${val("member1")}\n`;
+    } 
+    else if (teamSize.value === "4 Players (Squad)") {
+      members = `👥 *Team Members:*\n- ${val("member1")}\n- ${val("member2")}\n- ${val("member3")}\n`;
+    }
+
+    return [
       "✅ *Payment proof uploaded successfully.*",
-      "📸 *Image sent to admin automatically.*",
       "",
       `👤 *Name:* ${val("name")}`,
       `📞 *Phone:* ${val("phone")}`,
-      `📧 *Email:* ${val("email") || "—"}`,
+      `📧 *Email:* ${val("email")}`,
       `🎮 *Free Fire ID:* ${val("gameID")}`,
       `👥 *Team:* ${val("teamSize")}`,
+      members,
       `💻 *Platform:* ${val("platform")}`,
       `⭐ *Level:* ${val("experience")}`,
       `💬 *Reason:* ${val("reason")}`,
@@ -360,12 +403,11 @@
     ].join("\n");
   }
 
-  // Form submission
+  // Submit form
   form.addEventListener("submit", e => {
     e.preventDefault();
     const msg = encodeURIComponent(buildMessage());
-    const phone = ADMIN_WHATSAPP;
-    window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
+    window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, "_blank");
     form.reset();
     preview.innerHTML = "";
     submitBtn.disabled = true;

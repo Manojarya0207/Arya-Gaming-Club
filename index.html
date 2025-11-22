@@ -151,10 +151,8 @@
     }
 
     .upi-btn {
-      display: block;
-      text-align: center;
-      margin: 10px auto;
       width: 100%;
+      margin-top: 10px;
     }
 
     .preview img {
@@ -174,17 +172,12 @@
       font-weight: 700;
       font-size: 1rem;
       cursor: pointer;
-      transition: transform 0.2s;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     button[type="submit"]:disabled {
       background: #aacbff;
       cursor: not-allowed;
-    }
-
-    button[type="submit"]:hover:not(:disabled) {
-      transform: translateY(-2px);
     }
 
     footer {
@@ -227,38 +220,21 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col">
-          <label>Email</label>
-          <input type="email" id="email" placeholder="you@example.com" />
-        </div>
-        <div class="col">
-          <label>Free Fire ID</label>
-          <input type="text" id="gameID" required placeholder="Game ID / Nickname" />
-        </div>
-      </div>
+      <label>Email (Optional)</label>
+      <input type="email" id="email" placeholder="you@example.com" />
 
-      <div class="row">
-        <div class="col">
-          <label>Team Size</label>
-          <select id="teamSize" required>
-            <option value="">Select</option>
-            <option>1 Player (Solo)</option>
-            <option>2 Players (Duo)</option>
-            <option>4 Players (Squad)</option>
-          </select>
-        </div>
-        <div class="col">
-          <label>Platform</label>
-          <select id="platform" required>
-            <option value="">Select</option>
-            <option>Mobile</option>
-            <option>Computer</option>
-          </select>
-        </div>
-      </div>
+      <label>Free Fire ID</label>
+      <input type="text" id="gameID" required placeholder="Game ID / Nickname" />
 
-      <!-- TEAM MEMBER ID SECTION -->
+      <label>Team Size</label>
+      <select id="teamSize" required>
+        <option value="">Select</option>
+        <option>1 Player (Solo)</option>
+        <option>2 Players (Duo)</option>
+        <option>4 Players (Squad)</option>
+      </select>
+
+      <!-- TEAM MEMBERS -->
       <div id="teamMembersBox" style="display:none; margin-top:10px;">
         <label><strong>Team Members Game IDs</strong></label>
         <div id="teamMembersInputs"></div>
@@ -272,9 +248,6 @@
         <option>Pro</option>
       </select>
 
-      <label>Why do you want to join?</label>
-      <textarea id="reason" rows="3" required placeholder="Tell us in a few words..."></textarea>
-
       <div class="payment-box">
         <p><strong>💳 Entry Fee: ₹299</strong></p>
         <p>Scan this QR code or use the UPI ID below to pay securely.</p>
@@ -284,7 +257,7 @@
         <button type="button" id="upiBtn" class="upi-btn">Pay ₹299 via UPI App</button>
 
         <div class="copy-box">
-          <input id="upi" type="text" readonly value="8792090466-2@ybl" />
+          <input id="upi" type="text" readonly value="manojarya0207@upi" />
           <button type="button" id="copyBtn" class="copy-btn">Copy</button>
         </div>
 
@@ -302,116 +275,127 @@
     © 2025 Arya Group | Contact: manojarya0207@mail.com | +91 8792090466
   </footer>
 
-  <script>
-  const ADMIN_WHATSAPP = "918792090466";
-  const UPI_ID = "8792090466-2@ybl";
-  const PAYEE_NAME = "THARUN ";
-  const AMOUNT = 299;
-  const NOTE = "FF Club Entry";
+<script>
+const GOOGLE_SCRIPT_URL = "YOUR_WEB_APP_URL"; // Replace with your URL
+const ADMIN_WHATSAPP = "918792090466";
 
-  const form = document.getElementById("clubForm");
-  const proof = document.getElementById("proof");
-  const submitBtn = document.getElementById("submitBtn");
-  const preview = document.getElementById("preview");
-  const upiBtn = document.getElementById("upiBtn");
+const UPI_ID = "8792090466-2@ybl";
+const PAYEE_NAME = "THARUN";
+const AMOUNT = 299;
+const NOTE = "FF Club Entry";
 
-  const teamSize = document.getElementById("teamSize");
-  const teamMembersBox = document.getElementById("teamMembersBox");
-  const teamMembersInputs = document.getElementById("teamMembersInputs");
+const form = document.getElementById("clubForm");
+const proof = document.getElementById("proof");
+const preview = document.getElementById("preview");
+const submitBtn = document.getElementById("submitBtn");
 
-  // UPI deep link
-  const upiIntent = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${AMOUNT}&tn=${encodeURIComponent(NOTE)}&cu=INR`;
-  upiBtn.addEventListener("click", () => window.location.href = upiIntent);
+const teamSize = document.getElementById("teamSize");
+const teamMembersBox = document.getElementById("teamMembersBox");
+const teamMembersInputs = document.getElementById("teamMembersInputs");
 
-  // Enable submit on image
-  proof.addEventListener("change", () => {
-    preview.innerHTML = "";
-    const file = proof.files[0];
-    if (!file) { submitBtn.disabled = true; return; }
-    const img = document.createElement("img");
-    img.src = URL.createObjectURL(file);
-    img.onload = () => URL.revokeObjectURL(img.src);
-    preview.appendChild(img);
-    submitBtn.disabled = false;
-  });
+// Enable submit after payment proof
+proof.addEventListener("change", () => {
+  preview.innerHTML = "";
+  const file = proof.files[0];
+  if (file) submitBtn.disabled = false;
+});
 
-  // Copy UPI ID
-  document.getElementById("copyBtn").addEventListener("click", async () => {
-    await navigator.clipboard.writeText(UPI_ID);
-    alert("✅ UPI ID copied!");
-  });
+// Show Team Inputs
+teamSize.addEventListener("change", () => {
+  teamMembersInputs.innerHTML = "";
 
-  // TEAM MEMBER INPUTS
-  teamSize.addEventListener("change", () => {
-    const value = teamSize.value;
-    teamMembersInputs.innerHTML = "";
+  if (teamSize.value === "2 Players (Duo)") {
+    teamMembersBox.style.display = "block";
+    addTeamMembers(1);
+  } 
+  else if (teamSize.value === "4 Players (Squad)") {
+    teamMembersBox.style.display = "block";
+    addTeamMembers(3);
+  }
+  else {
+    teamMembersBox.style.display = "none";
+  }
+});
 
-    if (value === "2 Players (Duo)") {
-      teamMembersBox.style.display = "block";
-      addMemberFields(1);
-    } 
-    else if (value === "4 Players (Squad)") {
-      teamMembersBox.style.display = "block";
-      addMemberFields(3);
-    } 
-    else {
-      teamMembersBox.style.display = "none";
-    }
-  });
+function addTeamMembers(count) {
+  for (let i = 1; i <= count; i++) {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = `Member ${i} Free Fire ID`;
+    input.id = `member${i}`;
+    input.required = true;
+    input.style.marginBottom = "10px";
+    teamMembersInputs.appendChild(input);
+  }
+}
 
-  function addMemberFields(count) {
-    for (let i = 1; i <= count; i++) {
-      const input = document.createElement("input");
-      input.type = "text";
-      input.placeholder = `Member ${i} Free Fire ID`;
-      input.id = `member${i}`;
-      input.required = true;
-      input.style.marginBottom = "10px";
-      teamMembersInputs.appendChild(input);
-    }
+// Copy UPI ID
+document.getElementById("copyBtn").addEventListener("click", async () => {
+  await navigator.clipboard.writeText(UPI_ID);
+  alert("✅ UPI ID copied!");
+});
+
+// WhatsApp message builder
+function buildMessage(data) {
+  return [
+    "🔰 *Free Fire Warriors Club — Registration*",
+    "",
+    `👤 *Name:* ${data.name}`,
+    `📞 *Phone:* ${data.phone}`,
+    `📧 *Email:* ${data.email || "—"}`,
+    `🎮 *Free Fire ID:* ${data.gameID}`,
+    `👥 *Team:* ${data.teamSize}`,
+    data.members.length ? ("👥 *Members:* " + data.members.join(", ")) : "",
+    `⭐ *Experience:* ${data.experience}`,
+    "",
+    `💰 *Amount Paid:* ₹${AMOUNT}`,
+    "🏢 *Arya Group of Company*"
+  ].join("\n");
+}
+
+// Submit Form
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  // Collect data
+  const data = {
+    name: name.value,
+    phone: phone.value,
+    age: age.value,
+    email: email.value,
+    gameID: gameID.value,
+    teamSize: teamSize.value,
+    experience: experience.value,
+    members: []
+  };
+
+  if (teamSize.value === "2 Players (Duo)") {
+    data.members.push(document.getElementById("member1").value);
+  }
+  if (teamSize.value === "4 Players (Squad)") {
+    data.members.push(
+      document.getElementById("member1").value,
+      document.getElementById("member2").value,
+      document.getElementById("member3").value
+    );
   }
 
-  // WhatsApp message builder
-  function buildMessage() {
-    const val = id => document.getElementById(id)?.value.trim() || "—";
-
-    let members = "";
-    if (teamSize.value === "2 Players (Duo)") {
-      members = `👥 *Team Members:*\n- ${val("member1")}\n`;
-    } 
-    else if (teamSize.value === "4 Players (Squad)") {
-      members = `👥 *Team Members:*\n- ${val("member1")}\n- ${val("member2")}\n- ${val("member3")}\n`;
-    }
-
-    return [
-      "✅ *Payment proof uploaded successfully.*",
-      "",
-      `👤 *Name:* ${val("name")}`,
-      `📞 *Phone:* ${val("phone")}`,
-      `📧 *Email:* ${val("email")}`,
-      `🎮 *Free Fire ID:* ${val("gameID")}`,
-      `👥 *Team:* ${val("teamSize")}`,
-      members,
-      `💻 *Platform:* ${val("platform")}`,
-      `⭐ *Level:* ${val("experience")}`,
-      `💬 *Reason:* ${val("reason")}`,
-      "",
-      `💰 *Amount:* ₹${AMOUNT}`,
-      `💳 *UPI:* ${UPI_ID}`,
-      "",
-      "🏢 *Powered by Arya Group*"
-    ].join("\n");
-  }
-
-  // Submit form
-  form.addEventListener("submit", e => {
-    e.preventDefault();
-    const msg = encodeURIComponent(buildMessage());
-    window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, "_blank");
-    form.reset();
-    preview.innerHTML = "";
-    submitBtn.disabled = true;
+  // Save to Google Sheet
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(data)
   });
+
+  // Send WhatsApp message
+  const msg = encodeURIComponent(buildMessage(data));
+  window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, "_blank");
+
+  alert("✅ Registration submitted successfully!");
+
+  form.reset();
+  preview.innerHTML = "";
+  submitBtn.disabled = true;
+});
 </script>
 
 </body>
